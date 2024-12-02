@@ -25,7 +25,7 @@ struct GitHubReposApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RepositoriesView()
         }
         .modelContainer(sharedModelContainer)
     }
