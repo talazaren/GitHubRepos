@@ -18,12 +18,13 @@ struct RepositoriesView: View {
                 } else {
                     List {
                         ForEach(reposService.repos, id: \.id) { repo in
-                            RepoRowView(repo: repo)
-                            //Text(repo.name)
+                            //RepoRowView(repo: repo)
+                            Text(repo.name)
                                 .task {
                                     await reposService.loadMoreContent(repo)
                                 }
                         }
+                        //.onDelete(perform: deleteRepos)
                     
                         switch reposService.loadingStatus {
                         case .loading:
@@ -48,4 +49,5 @@ struct RepositoriesView: View {
 
 #Preview {
     RepositoriesView()
+        //.modelContainer(for: RepoStore.self, inMemory: true)
 }

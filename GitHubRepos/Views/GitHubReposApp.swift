@@ -12,7 +12,7 @@ import SwiftData
 struct GitHubReposApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            RepoStore.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,7 +25,7 @@ struct GitHubReposApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RepositoriesView()
+            ContentView()
         }
         .modelContainer(sharedModelContainer)
     }

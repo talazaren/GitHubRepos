@@ -20,5 +20,5 @@ struct RepoRowView: View {
 }
 
 #Preview {
-    RepoRowView(repo: Repository(id: 111, full_name: "11234/yjhtfg", name: "Repo", description: "Description", owner: Owner(avatar_url: "111")))
+    RepoRowView(repo: Repository(id: 111, name: "Repo", description: "Description", owner: Owner(avatar_url: "111")))
 }
