@@ -5,9 +5,11 @@
 //  Created by Tatiana Lazarenko on 12/2/24.
 //
 
-import Foundation
+import SwiftUI
 
 struct ReposEndpoint: Endpoint {
+    var page: Int = 0
+    
     var baseURL: URL {
         URL(string: "https://api.github.com/")!
     }
@@ -25,6 +27,6 @@ struct ReposEndpoint: Endpoint {
     }
     
     var parameters: [String : Any]? {
-        ["q": "swift", "sort": "stars", "order": "asc", "page": "1"]
+        ["q": "swift", "sort": "stars", "order": "asc", "page": page, "per_page": 30]
     }
 }
