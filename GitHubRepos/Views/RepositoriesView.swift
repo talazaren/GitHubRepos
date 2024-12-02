@@ -8,38 +8,30 @@
 import SwiftUI
 
 struct RepositoriesView: View {
-    @State private var reposService = ReposService()
+    @Environment(ReposService.self) private var reposService
     
     var body: some View {
         NavigationStack {
-            Group {
-                if let error = reposService.error {
-                    Text(error.localizedDescription)
-                } else {
-                    List {
-                        ForEach(reposService.repos, id: \.id) { repo in
-                            RepoRowView(repo: repo)
-                            //Text(repo.name)
-                                .task {
-                                    await reposService.loadMoreContent(repo)
-                                }
-                        }
-                    
-                        switch reposService.loadingStatus {
-                        case .loading:
-                            Text(reposService.loadingStatus.rawValue)
-                            //ProgressView()
-                                //.frame(maxWidth: .infinity)
-                        case .notLoading:
-                            Text(reposService.loadingStatus.rawValue)
-                            //EmptyView()
-                        }
+            if let error = reposService.error {
+                Text(error.localizedDescription)
+            } else {
+                List {
+                    ForEach(reposService.repos, id: \.id) { repo in
+                        //Text(repo.name)
+                        RepoRowView(repo: repo)
+                            .task {
+                                await reposService.loadMoreContent(repo)
+                            }
                     }
-                    .listStyle(.plain)
+                    
+                    LoadingRowView()
                 }
+                .listStyle(.plain)
             }
-            .navigationTitle("Repositories")
+            
+            
         }
+        .navigationTitle("Repositories")
         .task {
             await reposService.fetchRepos()
         }
@@ -48,4 +40,5 @@ struct RepositoriesView: View {
 
 #Preview {
     RepositoriesView()
+        .environment(ReposService())
 }

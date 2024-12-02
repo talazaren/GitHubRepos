@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var reposService = ReposService()
     
     var body: some View {
         RepositoriesView()
+            .environment(reposService)
     }
 
 }

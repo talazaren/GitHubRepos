@@ -9,11 +9,7 @@ import SwiftUI
 
 @Observable
 final class ReposService {
-    var repos: [Repository] = [] {
-        didSet {
-            loadingStatus = .notLoading
-        }
-    }
+    var repos: [Repository] = []
     var error: NetworkError?
     var page: Int = 1
     var loadingStatus: LoadingStatus = .notLoading
@@ -29,6 +25,7 @@ final class ReposService {
             loadingStatus = .loading
             let response: APIResponse = try await networkManager.fetch(from: ReposEndpoint(page: page))
             self.repos.append(contentsOf: response.items)
+            loadingStatus = .notLoading
         } catch let error as NetworkError {
             self.error = error
         } catch {
