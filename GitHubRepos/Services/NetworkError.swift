@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum NetworkError: Error {
+enum NetworkError: Error, Equatable {
     case invalidResponse
     case decodingFailed
     case rateLimitExceeded(Int)
@@ -29,8 +29,8 @@ extension NetworkError: LocalizedError {
             return "🛠️ Server error occurred. Status code: \(statusCode)"
         case .unknownError(let statusCode):
             return "🤷🏻‍♂️ An unknown error occurred. Status code: \(statusCode)"
-        case .rateLimitExceeded(let statusCode):
-            return "😢 Max requests limit exceeded. Status code: \(statusCode)"
+        case .rateLimitExceeded:
+            return "😢 You reached the request limit"
         }
     }
 }

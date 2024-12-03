@@ -10,12 +10,12 @@ import SwiftData
 
 @Model
 final class RepoStore {
-    var id: String = UUID().uuidString
+    @Attribute(.unique) var id: String = UUID().uuidString
     var name: String = ""
     var repoDescription: String = ""
     var image: String = ""
     
-    init(id: String, name: String, repoDescription: String, image: String) {
+    init(id: String = UUID().uuidString, name: String, repoDescription: String, image: String) {
         self.id = id
         self.name = name
         self.repoDescription = repoDescription

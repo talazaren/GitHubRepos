@@ -6,22 +6,31 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     @State private var reposService = ReposService()
-    @State private var router = Router()
     
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            RepoStore.self,
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+
     var body: some View {
-        NavigationStack(path: $router.path) {
-            router.view(for: router.startScreen)
-                .navigationDestination(for: Route.self) { view in
-                    router.view(for: view)
-                }
+        NavigationStack {
+            RepoStorageView()
         }
         .environment(reposService)
-        .environment(router)
+        .modelContainer(sharedModelContainer)
     }
-
 }
 
 #Preview {

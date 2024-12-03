@@ -21,7 +21,14 @@ struct RepoRowView: View {
                         .padding(.horizontal, 8)
                 } placeholder: {
                     ProgressView()
+                        .frame(width: 40, height: 40)
+                        .padding(.horizontal, 8)
                 }
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                    .padding(.horizontal, 8)
             }
             
             VStack(alignment: .leading) {

@@ -27,6 +27,6 @@ struct ReposEndpoint: Endpoint {
     }
     
     var parameters: [String : Any]? {
-        ["q": "swift", "sort": "stars", "order": "asc", "page": page, "per_page": 30]
+        ["q": "swift", "sort": "stars", "order": "asc", "page": page, "per_page": 5]
     }
 }
