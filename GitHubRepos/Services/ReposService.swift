@@ -34,6 +34,9 @@ final class ReposService {
     }
     
     func loadMoreContent(_ repo: Repository) async {
+        if loadingStatus == .loading {
+            return
+        }
         if repos.isLast(repo) {
             page += 1
             await fetchRepos()

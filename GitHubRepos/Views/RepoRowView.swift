@@ -11,7 +11,7 @@ struct RepoRowView: View {
     var repo: Repository
     
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
             if let url = URL(string: repo.owner.avatar_url ?? "https://ru.meming.world/images/ru/7/73/%D0%A8%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD_%D0%BA%D0%BE%D1%82.jpg") {
                 AsyncImage(url: url) { image in
                     image
@@ -28,8 +28,12 @@ struct RepoRowView: View {
                 Text(repo.name)
                     .font(.headline)
                 Text(repo.description ?? "No description")
+                    .foregroundStyle(.gray)
             }
+            .padding(.top, -4)
         }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
     }
 }
 

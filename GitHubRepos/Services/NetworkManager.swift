@@ -42,6 +42,10 @@ final class NetworkManager: NetworkManaging {
         case 200...299:
             return
         case 400...499:
+            let remainingLimit = response.allHeaderFields["x-ratelimit-remaining"]
+            if let remainingLimit = remainingLimit as? String, Int(remainingLimit) == 0, response.statusCode == 403 {
+                throw NetworkError.rateLimitExceeded(response.statusCode)
+            }
             throw NetworkError.clientError(response.statusCode)
         case 500...599:
             throw NetworkError.serverError(response.statusCode)

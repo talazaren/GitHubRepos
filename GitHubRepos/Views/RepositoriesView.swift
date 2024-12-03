@@ -11,13 +11,14 @@ struct RepositoriesView: View {
     @Environment(ReposService.self) private var reposService
     
     var body: some View {
-            Group {
-                if let error = reposService.error {
-                    Text(error.localizedDescription)
-                } else {
-                    List {
+        VStack {
+            if let error = reposService.error {
+                Text(error.localizedDescription)
+                    .font(.headline)
+            } else {
+                ScrollView {
+                    LazyVStack(alignment: .leading) {
                         ForEach(reposService.repos, id: \.id) { repo in
-                            //Text(repo.name)
                             RepoRowView(repo: repo)
                                 .onAppear {
                                     Task {
@@ -25,13 +26,13 @@ struct RepositoriesView: View {
                                     }
                                 }
                         }
-                        
-                        LoadingRowView()
                     }
-                    .listStyle(.plain)
                 }
+                
+                LoadingRowView()
             }
-            .navigationTitle("Repositories")
+        }
+        .navigationTitle("Repositories")
         .task {
             await reposService.fetchRepos()
         }

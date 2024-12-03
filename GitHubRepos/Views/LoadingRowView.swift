@@ -13,14 +13,8 @@ struct LoadingRowView: View {
     var body: some View {
         switch reposService.loadingStatus {
         case .loading:
-            //Text(reposService.loadingStatus.rawValue)
-            ProgressView {
-                Text("Loading")
-                    .foregroundColor(.pink)
-                    .bold()
-            }
+            ProgressView ()
         case .notLoading:
-            //Text(reposService.loadingStatus.rawValue)
             EmptyView()
         }
     }
