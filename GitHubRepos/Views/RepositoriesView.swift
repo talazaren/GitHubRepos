@@ -8,39 +8,31 @@
 import SwiftUI
 
 struct RepositoriesView: View {
-    @State private var reposService = ReposService()
+    @Environment(ReposService.self) private var reposService
     
     var body: some View {
-        NavigationStack {
-            Group {
-                if let error = reposService.error {
-                    Text(error.localizedDescription)
-                } else {
-                    List {
+        VStack {
+            if let error = reposService.error {
+                Text(error.localizedDescription)
+                    .font(.headline)
+            } else {
+                ScrollView {
+                    LazyVStack(alignment: .leading) {
                         ForEach(reposService.repos, id: \.id) { repo in
-                            //RepoRowView(repo: repo)
-                            Text(repo.name)
-                                .task {
-                                    await reposService.loadMoreContent(repo)
+                            RepoRowView(repo: repo)
+                                .onAppear {
+                                    Task {
+                                        await reposService.loadMoreContent(repo)
+                                    }
                                 }
                         }
-                        //.onDelete(perform: deleteRepos)
-                    
-                        switch reposService.loadingStatus {
-                        case .loading:
-                            Text(reposService.loadingStatus.rawValue)
-                            //ProgressView()
-                                //.frame(maxWidth: .infinity)
-                        case .notLoading:
-                            Text(reposService.loadingStatus.rawValue)
-                            //EmptyView()
-                        }
                     }
-                    .listStyle(.plain)
                 }
+                
+                LoadingRowView()
             }
-            .navigationTitle("Repositories")
         }
+        .navigationTitle("Repositories")
         .task {
             await reposService.fetchRepos()
         }
@@ -49,5 +41,6 @@ struct RepositoriesView: View {
 
 #Preview {
     RepositoriesView()
+        .environment(ReposService())
         //.modelContainer(for: RepoStore.self, inMemory: true)
 }

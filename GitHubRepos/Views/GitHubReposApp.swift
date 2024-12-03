@@ -27,6 +27,5 @@ struct GitHubReposApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(sharedModelContainer)
     }
 }

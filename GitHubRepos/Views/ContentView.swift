@@ -6,13 +6,22 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-
+    @State private var reposService = ReposService()
+    @State private var router = Router()
+    
     var body: some View {
-        RepositoriesView()
+        NavigationStack(path: $router.path) {
+            router.view(for: router.startScreen)
+                .navigationDestination(for: Route.self) { view in
+                    router.view(for: view)
+                }
+        }
+        .environment(reposService)
+        .environment(router)
     }
+
 }
 
 #Preview {
