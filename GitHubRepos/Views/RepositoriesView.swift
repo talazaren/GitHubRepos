@@ -11,27 +11,27 @@ struct RepositoriesView: View {
     @Environment(ReposService.self) private var reposService
     
     var body: some View {
-        NavigationStack {
-            if let error = reposService.error {
-                Text(error.localizedDescription)
-            } else {
-                List {
-                    ForEach(reposService.repos, id: \.id) { repo in
-                        //Text(repo.name)
-                        RepoRowView(repo: repo)
-                            .task {
-                                await reposService.loadMoreContent(repo)
-                            }
+            Group {
+                if let error = reposService.error {
+                    Text(error.localizedDescription)
+                } else {
+                    List {
+                        ForEach(reposService.repos, id: \.id) { repo in
+                            //Text(repo.name)
+                            RepoRowView(repo: repo)
+                                .onAppear {
+                                    Task {
+                                        await reposService.loadMoreContent(repo)
+                                    }
+                                }
+                        }
+                        
+                        LoadingRowView()
                     }
-                    
-                    LoadingRowView()
+                    .listStyle(.plain)
                 }
-                .listStyle(.plain)
             }
-            
-            
-        }
-        .navigationTitle("Repositories")
+            .navigationTitle("Repositories")
         .task {
             await reposService.fetchRepos()
         }
