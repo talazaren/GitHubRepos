@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ReposEndpoint: Endpoint {
     var page: Int = 0
+    var perPage: Int = 5
     
     var baseURL: URL {
         URL(string: "https://api.github.com/")!
@@ -27,6 +28,6 @@ struct ReposEndpoint: Endpoint {
     }
     
     var parameters: [String : Any]? {
-        ["q": "swift", "sort": "stars", "order": "asc", "page": page, "per_page": 5]
+        ["q": "swift", "sort": "stars", "order": "asc", "page": page, "per_page": perPage]
     }
 }

@@ -30,8 +30,11 @@ struct RepoStorageView: View {
                         RepoRowView(repo: repo)
                             .onAppear {
                                 Task {
-                                    await reposService.loadMore(repoStore, reposStored, modelContext)
+                                    await reposService.loadMore(repoStore, reposStored, modelContext) {
+                                        reposService.setPage(for: reposStored)
+                                    }
                                 }
+                                
                             }
                     }
                 }

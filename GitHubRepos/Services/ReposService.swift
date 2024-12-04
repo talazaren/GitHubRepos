@@ -18,6 +18,7 @@ enum LoadingStatus: String {
 final class ReposService {
     var error: NetworkError?
     var page: Int = 1
+    var perPage: Int = 10
     var loadingStatus: LoadingStatus = .notLoading
     
     private let networkManager: NetworkManaging
@@ -29,7 +30,7 @@ final class ReposService {
     func fetchRepos(modelContext: ModelContext) async {
         do {
             loadingStatus = .loading
-            let response: APIResponse = try await networkManager.fetch(from: ReposEndpoint(page: page))
+            let response: APIResponse = try await networkManager.fetch(from: ReposEndpoint(page: page, perPage: perPage))
             
             await saveToDatabase(modelContext: modelContext, items: response.items)
             loadingStatus = .notLoading
@@ -41,12 +42,12 @@ final class ReposService {
         }
     }
     
-    func loadMore(_ repo: RepoStore, _ repos: [RepoStore], _ modelContext: ModelContext) async {
+    func loadMore(_ repo: RepoStore, _ repos: [RepoStore], _ modelContext: ModelContext, completion: () -> Void) async {
         if loadingStatus == .loading {
             return
         }
         if repos.isLast(repo) {
-            page += 1
+            completion()
             await fetchRepos(modelContext: modelContext)
         }
     }
@@ -92,6 +93,9 @@ final class ReposService {
         }
     }
     
+    func setPage(for repos: [RepoStore]) {
+        page = repos.count / perPage
+    }
 }
 
 
