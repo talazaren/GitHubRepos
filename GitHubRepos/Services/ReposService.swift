@@ -16,7 +16,11 @@ enum LoadingStatus: String {
 @MainActor
 @Observable
 final class ReposService {
-    var error: NetworkError?
+    var error: NetworkError? {
+        didSet {
+            loadingStatus = .notLoading
+        }
+    }
     var page: Int = 1
     var perPage: Int = 10
     var loadingStatus: LoadingStatus = .notLoading

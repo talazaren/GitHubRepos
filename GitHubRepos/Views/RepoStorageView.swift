@@ -20,14 +20,14 @@ struct RepoStorageView: View {
         VStack {
             List {
                 ForEach(reposStored) { repoStore in
-                    let repo = Repository(
-                        id: Int(repoStore.id) ?? Int.random(in: 1...1000000),
+                    let convertedRepo = Repository(
+                        id: Int(repoStore.id) ?? Int.random(in: 10000000...900000000),
                         name: repoStore.name,
                         description: repoStore.repoDescription,
                         owner: Owner(avatar_url: repoStore.image)
                     )
                     NavigationLink(value: repoStore) {
-                        RepoRowView(repo: repo)
+                        RepoRowView(repo: convertedRepo)
                             .onAppear {
                                 Task {
                                     await reposService.loadMore(repoStore, reposStored, modelContext) {
@@ -44,8 +44,7 @@ struct RepoStorageView: View {
                 RepoDetailView(repo: repo)
             }
             .listStyle(.plain)
-            .onChange(of: reposService.error) { newError, _ in
-                reposService.loadingStatus = .notLoading
+            .onChange(of: reposService.error) { _, _ in
                 showAlert = true
             }
             .alert(isPresented: $showAlert) {
