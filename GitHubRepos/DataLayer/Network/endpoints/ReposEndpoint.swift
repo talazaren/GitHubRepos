@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ReposEndpoint: Endpoint {
-    var page: Int = 0
-    var perPage: Int = 5
+    var page: Int = 1
+    var perPage: Int = Constants.perPage
     
     var baseURL: URL {
         URL(string: "https://api.github.com/")!

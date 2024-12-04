@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct APIResponse: Codable {
-    let items: [Repository]
+struct SearchReposAPIResponse: Codable {
+    let items: [SearchReposRepository]
 }
 
-struct Repository: Identifiable, Codable {
+struct SearchReposRepository: Identifiable, Codable {
     let id: Int
     let name: String
     let description: String?

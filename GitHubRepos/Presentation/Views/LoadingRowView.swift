@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct LoadingRowView: View {
-    @Environment(ReposService.self) private var reposService
+    @Environment(RepositoryViewModel.self) private var repoVM
     
     var body: some View {
-        switch reposService.loadingStatus {
+        switch repoVM.loadingStatus {
         case .loading:
             ProgressView ()
         case .notLoading:
@@ -22,5 +22,5 @@ struct LoadingRowView: View {
 
 #Preview {
     LoadingRowView()
-        .environment(ReposService())
+        .environment(RepositoryViewModel())
 }

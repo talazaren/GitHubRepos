@@ -10,18 +10,15 @@ import SwiftData
 
 struct RepoDetailView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) var modelContext
-    @Environment(ReposService.self) private var reposService
+    @Environment(RepositoryViewModel.self) private var repoVM
     
-    @Query private var reposStored: [RepoStore]
-    
-    var repo: RepoStore
+    var repo: GHRepository
     
     @State private var imageLink: String = ""
     @State private var title: String = ""
     @State private var description: String = ""
     
-    init(repo: RepoStore) {
+    init(repo: GHRepository) {
         self.repo = repo
         _imageLink = State(initialValue: repo.image)
         _title = State(initialValue: repo.name)
@@ -79,11 +76,11 @@ struct RepoDetailView: View {
                     repo.name = title
                     repo.repoDescription = description
                     
-                    do {
+                    /*do {
                         try modelContext.save()
                     } catch {
                         print("Saving context error: \(error.localizedDescription)")
-                    }
+                    }*/
                     
                     dismiss()
                 }
@@ -93,6 +90,6 @@ struct RepoDetailView: View {
 }
 
 #Preview {
-    RepoDetailView(repo: RepoStore(name: "Repository", repoDescription: "Description", image: "https://ru.meming.world/images/ru/7/73/%D0%A8%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD_%D0%BA%D0%BE%D1%82.jpg"))
-        .environment(ReposService())
+    RepoDetailView(repo: GHRepository(name: "Repository", repoDescription: "Description", image: "https://ru.meming.world/images/ru/7/73/%D0%A8%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD_%D0%BA%D0%BE%D1%82.jpg"))
+        .environment(RepositoryViewModel())
 }

@@ -12,7 +12,7 @@ enum LoadingStatus: String {
     case loading = "Loading..."
     case notLoading = "Not Loading..."
 }
-
+/*
 @MainActor
 @Observable
 final class ReposService {
@@ -25,16 +25,16 @@ final class ReposService {
     var perPage: Int = 10
     var loadingStatus: LoadingStatus = .notLoading
     
-    private let networkManager: NetworkManaging
+    private let networkService: NetworkService
     
-    init(networkManager: NetworkManaging = NetworkManager.shared) {
-        self.networkManager = networkManager
+    init(networkService: NetworkService = NetworkServiceImpl.shared) {
+        self.networkService = networkService
     }
     
     func fetchRepos(modelContext: ModelContext) async {
         do {
             loadingStatus = .loading
-            let response: APIResponse = try await networkManager.fetch(from: ReposEndpoint(page: page, perPage: perPage))
+            let response: SearchReposAPIResponse = try await networkService.fetch(from: ReposEndpoint(page: page, perPage: perPage))
             
             await saveToDatabase(modelContext: modelContext, items: response.items)
             loadingStatus = .notLoading
@@ -46,7 +46,7 @@ final class ReposService {
         }
     }
     
-    func loadMore(_ repo: RepoStore, _ repos: [RepoStore], _ modelContext: ModelContext, completion: () -> Void) async {
+    func loadMore(_ repo: GHRepository, _ repos: [GHRepository], _ modelContext: ModelContext, completion: () -> Void) async {
         if loadingStatus == .loading {
             return
         }
@@ -56,9 +56,9 @@ final class ReposService {
         }
     }
     
-    func saveToDatabase(modelContext: ModelContext, items: [Repository]) async {
+    func saveToDatabase(modelContext: ModelContext, items: [SearchReposRepository]) async {
         items.forEach { repo in
-            let itemToStore = RepoStore(
+            let itemToStore = GHRepository(
                 name: repo.name,
                 repoDescription: repo.description ?? "No description",
                 image: repo.owner.avatar_url ?? "https://ru.meming.world/images/ru/7/73/%D0%A8%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD_%D0%BA%D0%BE%D1%82.jpg"
@@ -72,7 +72,7 @@ final class ReposService {
         }
     }
     
-    func deleteRepositories(from modelContext: ModelContext, repos: [RepoStore]) {
+    func deleteRepositories(from modelContext: ModelContext, repos: [GHRepository]) {
         repos.forEach { repo in
             modelContext.delete(repo)
         }
@@ -84,7 +84,7 @@ final class ReposService {
         }
     }
     
-    func deleteRepo(at offsets: IndexSet, in repos: [RepoStore], modelContext: ModelContext) {
+    func deleteRepo(at offsets: IndexSet, in repos: [GHRepository], modelContext: ModelContext) {
         offsets.forEach { index in
             let repo = repos[index]
             modelContext.delete(repo)
@@ -97,9 +97,9 @@ final class ReposService {
         }
     }
     
-    func setPage(for repos: [RepoStore]) {
+    func setPage(for repos: [GHRepository]) {
         page = repos.count / perPage
     }
-}
+}*/
 
 

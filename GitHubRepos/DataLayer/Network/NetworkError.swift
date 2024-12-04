@@ -14,6 +14,7 @@ enum NetworkError: Error, Equatable {
     case clientError(Int)
     case serverError(Int)
     case unknownError(Int)
+    case httpError(HTTPURLResponse)
 }
 
 extension NetworkError: LocalizedError {
@@ -31,6 +32,8 @@ extension NetworkError: LocalizedError {
             return "🤷🏻‍♂️ An unknown error occurred. Status code: \(statusCode)"
         case .rateLimitExceeded:
             return "😢 You reached the request limit"
+        case .httpError:
+            return "❌ An error occurred while performing the request."
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  RepoStore.swift
+//  GHRepository.swift
 //  GitHubRepos
 //
 //  Created by Tatiana Lazarenko on 12/2/24.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @Model
-final class RepoStore {
+final class GHRepository {
     @Attribute(.unique) var id: String = UUID().uuidString
     var name: String = ""
     var repoDescription: String = ""
