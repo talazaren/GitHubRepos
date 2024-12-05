@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+enum LoadingStatus: String {
+    case loading = "Loading..."
+    case notLoading = "Not Loading..."
+}
+
 @Observable
 final class RepositoryViewModel {
     var repositories: [GHRepository] = []

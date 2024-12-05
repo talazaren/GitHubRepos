@@ -20,9 +20,7 @@ actor NetworkServiceImpl: NetworkService {
     
     func fetch<T: Decodable>(from endpoint: Endpoint) async throws -> (T, HTTPURLResponse) {
         let request = try endpoint.urlRequest()
-        print("Request sent")
         let (data, response) = try await session.data(for: request)
-        print("Reponse received")
         
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
@@ -35,7 +33,6 @@ actor NetworkServiceImpl: NetworkService {
             let decodedData = try decoder.decode(T.self, from: data)
             return (decodedData, httpResponse)
         } catch {
-            print(error)
             throw NetworkError.decodingFailed
         }
     }
