@@ -23,7 +23,6 @@ actor NetworkServiceImpl: NetworkService {
         print("Request sent")
         let (data, response) = try await session.data(for: request)
         print("Reponse received")
-        print(response.url)
         
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
