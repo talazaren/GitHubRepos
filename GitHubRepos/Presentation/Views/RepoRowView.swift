@@ -32,15 +32,30 @@ struct RepoRowView: View {
             }
             
             VStack(alignment: .leading) {
-                Text("\(repo.stars)")
+                Text("\(repo.name)")
                     .font(.headline)
-                Text("\(repo.pushedAt)")
+                
+                HStack(spacing: 6) {
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(.yellow)
+                        .font(.caption)
+                    Text("\(repo.stars)")
+                        .foregroundStyle(.yellow)
+                        .font(.caption)
+                }
+                
+                Text("\(repo.repoDescription)")
                     .foregroundStyle(.gray)
                     .lineLimit(5)
+                    .padding(.top, 4)
+                
+                Text("\(repo.pushedAt)")
+                    .font(.caption)
+                    .foregroundStyle(.blue)
+                    .padding(.top, 4)
             }
             .padding(.top, -4)
         }
-        .padding(.horizontal, 16)
         .padding(.vertical, 8)
     }
 }

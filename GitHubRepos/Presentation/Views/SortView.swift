@@ -36,14 +36,14 @@ struct SortView: View {
                     }
                 }
             } label: {
-                Text(repoVM.order.rawValue)
-                //                Image(systemName: repoVM.order.icon)
-                //                    .resizable()
-                //                    .frame(width: 25, height: 25)
+                Image(systemName: repoVM.order.icon)
+                    .resizable()
+                    .frame(width: 25, height: 25)
             }
             .disabled(repoVM.loadingStatus == .loading)
             .padding(.trailing, 20)
         }
+        .padding(.top, 8)
         .onChange(of: sort) { _, sort in
             Task {
                 await repoVM.setSort(sort)

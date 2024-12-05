@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct RepoStorageView: View {
+struct RepositoriesView: View {
     @Environment(RepositoryViewModel.self) private var repoVM
     
     @State private var showAlert = false
@@ -81,6 +81,6 @@ struct RepoStorageView: View {
 }
 
 #Preview {
-    RepoStorageView()
+    RepositoriesView()
         .environment(RepositoryViewModel())
 }

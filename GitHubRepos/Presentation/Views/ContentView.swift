@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var repoVM = RepositoryViewModel()
 
     var body: some View {
-        RepoStorageView()
+        RepositoriesView()
             .environment(repoVM)
     }
 }
