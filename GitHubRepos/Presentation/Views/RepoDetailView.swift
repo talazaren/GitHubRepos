@@ -72,15 +72,16 @@ struct RepoDetailView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Save") {
-                    repo.image = imageLink
-                    repo.name = title
-                    repo.repoDescription = description
-                    
-                    /*do {
-                        try modelContext.save()
-                    } catch {
-                        print("Saving context error: \(error.localizedDescription)")
-                    }*/
+                    Task {
+                        await repoVM.updateRepo(
+                            repo: GHRepository(
+                                id: repo.id,
+                                name: title,
+                                repoDescription: description,
+                                image: imageLink
+                            )
+                        )
+                    }
                     
                     dismiss()
                 }

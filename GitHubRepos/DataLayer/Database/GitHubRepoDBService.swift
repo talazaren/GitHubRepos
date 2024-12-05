@@ -12,6 +12,7 @@ protocol GitHubReposDBService {
     func fetchRepos() async throws -> [GHRepository]
     func add(repos: [GHRepository]) async throws
     func delete(repos: [GHRepository]) async throws
+    func update(repo: GHRepository) async throws
 }
 
 final class GitHubReposDBServiceImpl: GitHubReposDBService {
@@ -46,6 +47,20 @@ final class GitHubReposDBServiceImpl: GitHubReposDBService {
             .forEach {
                 context.delete($0)
             }
+        try context.save()
+    }
+    
+    @MainActor
+    func update(repo: GHRepository) async throws {
+        let repos = try await fetchRepos()
+        print(repos.firstIndex(of: repo) ?? "000")
+        guard let index = repos.map(\.id).firstIndex(of: repo.id) else { throw DBError.notFound }
+        
+        repos[index].name = repo.name
+        repos[index].repoDescription = repo.repoDescription
+        repos[index].image = repo.image
+        
+        let context = container.mainContext
         try context.save()
     }
 }

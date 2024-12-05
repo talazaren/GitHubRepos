@@ -79,4 +79,13 @@ final class RepositoryViewModel {
         }
     }
     
+    func updateRepo(repo: GHRepository) async {
+        do {
+            try await useCase.updateRepo(repo: repo)
+            guard let index = repositories.map(\.id).firstIndex(of: repo.id) else { return }
+            repositories[index] = repo
+        } catch {
+            print("Saving context error: \(error.localizedDescription)")
+        }
+    }
 }

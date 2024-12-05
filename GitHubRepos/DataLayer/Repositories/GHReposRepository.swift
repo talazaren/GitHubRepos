@@ -11,6 +11,7 @@ protocol GHReposRepository {
     func getInitialRepos() async throws -> [GHRepository]
     func getMoreRepos(page: Int) async throws -> [GHRepository]
     func deleteRepos(repos: [GHRepository]) async throws
+    func updateRepo(repo: GHRepository) async throws
 }
 
 final class GHReposRepositoryImpl: GHReposRepository {
@@ -41,6 +42,10 @@ final class GHReposRepositoryImpl: GHReposRepository {
     
     func deleteRepos(repos: [GHRepository]) async throws {
         try await db?.delete(repos: repos)
+    }
+    
+    func updateRepo(repo: GHRepository) async throws {
+        try await db?.update(repo: repo)
     }
     
     private func convertToGHRepos(_ repos: [SearchReposRepository]) -> [GHRepository] {

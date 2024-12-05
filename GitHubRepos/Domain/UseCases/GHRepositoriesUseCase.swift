@@ -11,6 +11,7 @@ protocol GHRepositoriesUseCase {
     func getInitialRepos() async throws -> [GHRepository]
     func getMoreRepos(page: Int) async throws -> [GHRepository]
     func deleteRepos(repos: [GHRepository]) async throws
+    func updateRepo(repo: GHRepository) async throws
 }
 
 final class GHRepositoriesUseCaseImpl: GHRepositoriesUseCase {
@@ -30,5 +31,9 @@ final class GHRepositoriesUseCaseImpl: GHRepositoriesUseCase {
     
     func deleteRepos(repos: [GHRepository]) async throws {
         try await repository.deleteRepos(repos: repos)
+    }
+    
+    func updateRepo(repo: GHRepository) async throws {
+        try await repository.updateRepo(repo: repo)
     }
 }
