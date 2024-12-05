@@ -14,55 +14,62 @@ struct RepoStorageView: View {
     @State private var showAlert = false
     
     var body: some View {
-        VStack {
-            List {
-                ForEach(repoVM.repositories) { repository in
-                    NavigationLink(value: repository) {
-                        RepoRowView(repo: repository)
-                            .onAppear {
-                                Task {
-                                    await repoVM.loadMoreRepos(repo: repository)
+        NavigationStack {
+            VStack {
+                List {
+                    ForEach(repoVM.repositories) { repository in
+                        NavigationLink(value: repository) {
+                            RepoRowView(repo: repository)
+                                .onAppear {
+                                    Task {
+                                        await repoVM.loadMoreRepos(repo: repository)
+                                    }
                                 }
-                            }
-                        
+                        }
+                    }
+                    .onDelete(perform: repoVM.deleteRepo)
+                }
+                .listStyle(.plain)
+                .navigationDestination(for: GHRepository.self) { repo in
+                    RepoDetailView(repo: repo)
+                }
+                .onChange(of: repoVM.error) { _, _ in
+                    showAlert = true
+                }
+                .alert(Constants.alertTitle, isPresented: $showAlert) {
+                    Button(role: .cancel) {
+                    } label: {
+                        Text("OK")
+                    }
+                } message: {
+                    Text(repoVM.error?.localizedDescription ?? "Error")
+                }
+                
+                LoadingRowView()
+                
+            }
+            .navigationTitle(Constants.viewTitle)
+            .task {
+                await repoVM.fetchRepos()
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        Task {
+                            await repoVM.fetchRepos()
+                        }
+                    } label: {
+                        Image(systemName: "arrow.trianglehead.clockwise")
                     }
                 }
-                .onDelete(perform: repoVM.deleteRepo)
-            }
-            .navigationDestination(for: GHRepository.self) { repo in
-                RepoDetailView(repo: repo)
-            }
-            .listStyle(.plain)
-            .onChange(of: repoVM.error) { _, _ in
-                showAlert = true
-            }
-            .alert(isPresented: $showAlert) {
-                Alert(title: Text("Oops"), message: Text(repoVM.error?.localizedDescription ?? "error"), dismissButton: .default(Text("OK")))
-            }
-            
-            LoadingRowView()
-            
-        }
-        .task {
-            await repoVM.fetchRepos()
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    Task {
-                        await repoVM.fetchRepos()
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        Task {
+                            await repoVM.deleteRepos()
+                        }
+                    } label: {
+                        Image(systemName: "trash")
                     }
-                } label: {
-                    Image(systemName: "arrow.trianglehead.clockwise")
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    Task {
-                        await repoVM.deleteRepos()
-                    }
-                } label: {
-                    Image(systemName: "trash")
                 }
             }
         }

@@ -47,19 +47,19 @@ struct RepoDetailView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 20)
             }
-            TextField("Input image link", text: $imageLink)
+            TextField(Constants.inputRepoLink, text: $imageLink)
                 .textFieldStyle(.plain)
                 .multilineTextAlignment(.leading)
                 .padding(.horizontal, 20)
                 .foregroundStyle(.gray)
             
-            TextField("Input repository name", text: $title)
+            TextField(Constants.inputRepoTitle, text: $title)
                 .textFieldStyle(.plain)
                 .multilineTextAlignment(.leading)
                 .padding(.horizontal, 20)
                 .font(.title)
             
-            TextField("Input repository description", text: $description)
+            TextField(Constants.inputRepoDesc, text: $description)
                 .textFieldStyle(.plain)
                 .multilineTextAlignment(.leading)
                 .padding(.horizontal, 20)
@@ -91,6 +91,6 @@ struct RepoDetailView: View {
 }
 
 #Preview {
-    RepoDetailView(repo: GHRepository(name: "Repository", repoDescription: "Description", image: "https://ru.meming.world/images/ru/7/73/%D0%A8%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD_%D0%BA%D0%BE%D1%82.jpg"))
+    RepoDetailView(repo: GHRepository(name: "Repository", repoDescription: "Description", image: Constants.imagePlaceholder))
         .environment(RepositoryViewModel())
 }
