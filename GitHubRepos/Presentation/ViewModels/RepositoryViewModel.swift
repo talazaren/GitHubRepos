@@ -16,6 +16,26 @@ final class RepositoryViewModel {
         }
     }
     var loadingStatus: LoadingStatus = .notLoading
+    var sort: SearchReposSort = getInitialSort() {
+        didSet {
+            Task {
+                print(sort.rawValue)
+                await UserDefaults.standard.set(sort.rawValue, forKey: Constants.udSearchReposSortsKey)
+                print(UserDefaults.standard.string(forKey: Constants.udSearchReposSortsKey))
+                await deleteRepos()
+                await fetchRepos()
+            }
+        }
+    }
+    var order: SearchReposOrder = getInitialOrder() {
+        didSet {
+            Task {
+                UserDefaults.standard.set(order.rawValue, forKey: Constants.udSearchReposOrderKey)
+                await deleteRepos()
+                await fetchRepos()
+            }
+        }
+    }
     
     private let useCase: GHRepositoriesUseCase
     
@@ -27,7 +47,7 @@ final class RepositoryViewModel {
         do {
             error = nil
             loadingStatus = .loading
-            repositories = try await useCase.getInitialRepos()
+            repositories = try await useCase.getInitialRepos(sort: sort, order: order)
             loadingStatus = .notLoading
         } catch let error as NetworkError {
             self.error = error
@@ -45,7 +65,7 @@ final class RepositoryViewModel {
                 error = nil
                 loadingStatus = .loading
                 let page = Int((Double(repositories.count) / Double(Constants.perPage)).rounded(.up)) + 1
-                let newRepos = try await useCase.getMoreRepos(page: page)
+                let newRepos = try await useCase.getMoreRepos(page: page, sort: sort, order: order)
                 repositories += newRepos
                 loadingStatus = .notLoading
             } catch let error as NetworkError {
@@ -87,5 +107,15 @@ final class RepositoryViewModel {
         } catch {
             print("Saving context error: \(error.localizedDescription)")
         }
+    }
+    
+    private static func getInitialSort() -> SearchReposSort {
+        let sort = UserDefaults.standard.string(forKey: Constants.udSearchReposSortsKey) ?? SearchReposSort.stars.rawValue
+        return SearchReposSort(rawValue: sort) ?? .stars
+    }
+    
+    private static func getInitialOrder() -> SearchReposOrder {
+        let order = UserDefaults.standard.string(forKey: Constants.udSearchReposOrderKey) ?? SearchReposOrder.asc.rawValue
+        return SearchReposOrder(rawValue: order) ?? .asc
     }
 }

@@ -8,8 +8,8 @@
 import Foundation
 
 protocol GHReposRepository {
-    func getInitialRepos() async throws -> [GHRepository]
-    func getMoreRepos(page: Int) async throws -> [GHRepository]
+    func getInitialRepos(sort: SearchReposSort, order: SearchReposOrder) async throws -> [GHRepository]
+    func getMoreRepos(page: Int, sort: SearchReposSort, order: SearchReposOrder) async throws -> [GHRepository]
     func deleteRepos(repos: [GHRepository]) async throws
     func updateRepo(repo: GHRepository) async throws
 }
@@ -26,18 +26,21 @@ final class GHReposRepositoryImpl: GHReposRepository {
         self.db = db
     }
     
-    func getInitialRepos() async throws -> [GHRepository] {
+    func getInitialRepos(sort: SearchReposSort, order: SearchReposOrder) async throws -> [GHRepository] {
+        print(sort, order)
         let DBRepos = try await db?.fetchRepos() ?? []
+        print(DBRepos)
         
         if DBRepos.isEmpty {
-            return try await fetchReposAndSaveToDB(page: 1)
+            return try await fetchReposAndSaveToDB(page: 1, sort: sort, order: order)
         } else {
             return DBRepos
         }
     }
     
-    func getMoreRepos(page: Int) async throws -> [GHRepository] {
-        return try await fetchReposAndSaveToDB(page: page)
+    func getMoreRepos(page: Int, sort: SearchReposSort, order: SearchReposOrder) async throws -> [GHRepository] {
+        print("more", page, sort, order)
+        return try await fetchReposAndSaveToDB(page: page, sort: sort, order: order)
     }
     
     func deleteRepos(repos: [GHRepository]) async throws {
@@ -59,9 +62,9 @@ final class GHReposRepositoryImpl: GHReposRepository {
         }
     }
     
-    private func fetchReposAndSaveToDB(page: Int) async throws -> [GHRepository] {
+    private func fetchReposAndSaveToDB(page: Int, sort: SearchReposSort, order: SearchReposOrder) async throws -> [GHRepository] {
         let DBRepos = try await db?.fetchRepos() ?? []
-        let repos = try await api.fetchRepos(page: page)
+        let repos = try await api.fetchRepos(page: page, sort: sort, order: order)
         let convertedRepos = convertToGHRepos(repos)
         
         let filteredRepos = convertedRepos.reduce([] as [GHRepository]) { dbRepos, repo in

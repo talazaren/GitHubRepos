@@ -12,10 +12,13 @@ struct RepoStorageView: View {
     @Environment(RepositoryViewModel.self) private var repoVM
     
     @State private var showAlert = false
+    @State private var sort: SearchReposSort = .stars
     
     var body: some View {
         NavigationStack {
             VStack {
+                SortView(sort: $sort)
+                
                 List {
                     ForEach(repoVM.repositories) { repository in
                         NavigationLink(value: repository) {
@@ -47,6 +50,12 @@ struct RepoStorageView: View {
                 
                 LoadingRowView()
                 
+            }
+            .onAppear {
+                sort = repoVM.sort
+            }
+            .onChange(of: sort) { _, sort in
+                repoVM.sort = sort
             }
             .navigationTitle(Constants.viewTitle)
             .task {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 protocol GitHubRepoNetworkService {
-    func fetchRepos(page: Int) async throws -> [SearchReposRepository]
+    func fetchRepos(page: Int, sort: SearchReposSort, order: SearchReposOrder) async throws -> [SearchReposRepository]
 }
 
 
@@ -19,9 +19,9 @@ final class GitHubRepoNetworkServiceImpl: GitHubRepoNetworkService {
         self.networkService = networkService
     }
     
-    func fetchRepos(page: Int) async throws -> [SearchReposRepository] {
+    func fetchRepos(page: Int, sort: SearchReposSort, order: SearchReposOrder) async throws -> [SearchReposRepository] {
         do {
-            let (responseData, _): (SearchReposAPIResponse, HTTPURLResponse) = try await networkService.fetch(from: ReposEndpoint(page: page))
+            let (responseData, _): (SearchReposAPIResponse, HTTPURLResponse) = try await networkService.fetch(from: ReposEndpoint(page: page, sort: sort, order: order))
             return responseData.items
         } catch NetworkError.httpError(let response) {
             throw validateFetchReposResponse(response)

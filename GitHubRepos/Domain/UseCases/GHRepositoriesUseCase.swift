@@ -8,8 +8,8 @@
 import Foundation
 
 protocol GHRepositoriesUseCase {
-    func getInitialRepos() async throws -> [GHRepository]
-    func getMoreRepos(page: Int) async throws -> [GHRepository]
+    func getInitialRepos(sort: SearchReposSort, order: SearchReposOrder) async throws -> [GHRepository]
+    func getMoreRepos(page: Int, sort: SearchReposSort, order: SearchReposOrder) async throws -> [GHRepository]
     func deleteRepos(repos: [GHRepository]) async throws
     func updateRepo(repo: GHRepository) async throws
 }
@@ -21,12 +21,12 @@ final class GHRepositoriesUseCaseImpl: GHRepositoriesUseCase {
         self.repository = repository
     }
     
-    func getMoreRepos(page: Int) async throws -> [GHRepository] {
-        try await repository.getMoreRepos(page: page)
+    func getMoreRepos(page: Int, sort: SearchReposSort, order: SearchReposOrder) async throws -> [GHRepository] {
+        try await repository.getMoreRepos(page: page, sort: sort, order: order)
     }
     
-    func getInitialRepos() async throws -> [GHRepository] {
-        try await repository.getInitialRepos()
+    func getInitialRepos(sort: SearchReposSort, order: SearchReposOrder) async throws -> [GHRepository] {
+        try await repository.getInitialRepos(sort: sort, order: order)
     }
     
     func deleteRepos(repos: [GHRepository]) async throws {

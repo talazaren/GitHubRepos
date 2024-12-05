@@ -19,6 +19,7 @@ final class NetworkServiceImpl: NetworkService {
     }
     
     func fetch<T: Decodable>(from endpoint: Endpoint) async throws -> (T, HTTPURLResponse) {
+        print("request")
         let request = try endpoint.urlRequest()
         let (data, response) = try await session.data(for: request)
         
@@ -43,16 +44,6 @@ final class NetworkServiceImpl: NetworkService {
             return
         default:
             throw NetworkError.httpError(response)
-        /*case 400...499:
-            let remainingLimit = response.allHeaderFields["x-ratelimit-remaining"]
-            if let remainingLimit = remainingLimit as? String, Int(remainingLimit) == 0, response.statusCode == 403 {
-                throw NetworkError.rateLimitExceeded(response.statusCode)
-            }
-            throw NetworkError.clientError(response.statusCode)
-        case 500...599:
-            throw NetworkError.serverError(response.statusCode)
-        default:
-            throw NetworkError.unknownError(response.statusCode)*/
         }
     }
 }
