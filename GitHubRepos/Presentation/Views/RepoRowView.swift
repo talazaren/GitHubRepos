@@ -32,10 +32,11 @@ struct RepoRowView: View {
             }
             
             VStack(alignment: .leading) {
-                Text(repo.name)
+                Text("\(repo.stars)")
                     .font(.headline)
-                Text(repo.repoDescription)
+                Text("\(repo.pushedAt)")
                     .foregroundStyle(.gray)
+                    .lineLimit(5)
             }
             .padding(.top, -4)
         }
@@ -45,5 +46,5 @@ struct RepoRowView: View {
 }
 
 #Preview {
-    RepoRowView(repo: GHRepository(id: "111", name: "Repo", repoDescription: "Description", image: Constants.imagePlaceholder))
+    RepoRowView(repo: GHRepository(id: "111", name: "Repo", repoDescription: "Description", image: Constants.imagePlaceholder, stars: 100, updatedAt: Date()))
 }

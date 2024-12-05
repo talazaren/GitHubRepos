@@ -12,7 +12,7 @@ protocol GitHubRepoNetworkService {
 }
 
 
-final class GitHubRepoNetworkServiceImpl: GitHubRepoNetworkService {
+actor GitHubRepoNetworkServiceImpl: GitHubRepoNetworkService {
     private let networkService: NetworkService
     
     init(networkService: NetworkService = NetworkServiceImpl()) {
@@ -24,8 +24,10 @@ final class GitHubRepoNetworkServiceImpl: GitHubRepoNetworkService {
             let (responseData, _): (SearchReposAPIResponse, HTTPURLResponse) = try await networkService.fetch(from: ReposEndpoint(page: page, sort: sort, order: order))
             return responseData.items
         } catch NetworkError.httpError(let response) {
+            print(1)
             throw validateFetchReposResponse(response)
         } catch {
+            print(2)
             throw NetworkError.unknownError(0)
         }
     }

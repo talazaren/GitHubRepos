@@ -16,26 +16,8 @@ final class RepositoryViewModel {
         }
     }
     var loadingStatus: LoadingStatus = .notLoading
-    var sort: SearchReposSort = getInitialSort() {
-        didSet {
-            Task {
-                print(sort.rawValue)
-                await UserDefaults.standard.set(sort.rawValue, forKey: Constants.udSearchReposSortsKey)
-                print(UserDefaults.standard.string(forKey: Constants.udSearchReposSortsKey))
-                await deleteRepos()
-                await fetchRepos()
-            }
-        }
-    }
-    var order: SearchReposOrder = getInitialOrder() {
-        didSet {
-            Task {
-                UserDefaults.standard.set(order.rawValue, forKey: Constants.udSearchReposOrderKey)
-                await deleteRepos()
-                await fetchRepos()
-            }
-        }
-    }
+    var sort: SearchReposSort = getInitialSort()
+    var order: SearchReposOrder = getInitialOrder()
     
     private let useCase: GHRepositoriesUseCase
     
@@ -109,7 +91,21 @@ final class RepositoryViewModel {
         }
     }
     
-    private static func getInitialSort() -> SearchReposSort {
+    func setSort(_ newSort: SearchReposSort) async {
+        sort = newSort
+        await deleteRepos()
+        await fetchRepos()
+        UserDefaults.standard.set(sort.rawValue, forKey: Constants.udSearchReposSortsKey)
+    }
+    
+    func setOrder(_ newOrder: SearchReposOrder) async {
+        order = newOrder
+        await deleteRepos()
+        await fetchRepos()
+        UserDefaults.standard.set(order.rawValue, forKey: Constants.udSearchReposOrderKey)
+    }
+    
+    static func getInitialSort() -> SearchReposSort {
         let sort = UserDefaults.standard.string(forKey: Constants.udSearchReposSortsKey) ?? SearchReposSort.stars.rawValue
         return SearchReposSort(rawValue: sort) ?? .stars
     }

@@ -10,7 +10,7 @@ import SwiftUI
 struct SortView: View {
     @Environment(RepositoryViewModel.self) private var repoVM
     
-    @Binding var sort: SearchReposSort
+    @State private var sort: SearchReposSort = RepositoryViewModel.getInitialSort()
     
     var body: some View {
         HStack {
@@ -20,27 +20,39 @@ struct SortView: View {
                         .tag(sort)
                 }
             }
+            .disabled(repoVM.loadingStatus == .loading)
             .pickerStyle(.segmented)
             .padding(.horizontal, 20)
             
             Button {
                 switch repoVM.order {
                 case .asc:
-                    repoVM.order = .desc
+                    Task {
+                        await repoVM.setOrder(.desc)
+                    }
                 case .desc:
-                    repoVM.order = .asc
+                    Task {
+                        await repoVM.setOrder(.asc)
+                    }
                 }
             } label: {
-                Image(systemName: repoVM.order.icon)
-                    .resizable()
-                    .frame(width: 25, height: 25)
+                Text(repoVM.order.rawValue)
+                //                Image(systemName: repoVM.order.icon)
+                //                    .resizable()
+                //                    .frame(width: 25, height: 25)
             }
+            .disabled(repoVM.loadingStatus == .loading)
             .padding(.trailing, 20)
+        }
+        .onChange(of: sort) { _, sort in
+            Task {
+                await repoVM.setSort(sort)
+            }
         }
     }
 }
 
 #Preview {
-    SortView(sort: .constant(.stars))
+    SortView()
         .environment(RepositoryViewModel())
 }

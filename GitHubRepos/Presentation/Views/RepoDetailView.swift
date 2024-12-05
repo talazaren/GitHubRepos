@@ -78,7 +78,9 @@ struct RepoDetailView: View {
                                 id: repo.id,
                                 name: title,
                                 repoDescription: description,
-                                image: imageLink
+                                image: imageLink,
+                                stars: repo.stars,
+                                updatedAt: Date()
                             )
                         )
                     }
@@ -91,6 +93,6 @@ struct RepoDetailView: View {
 }
 
 #Preview {
-    RepoDetailView(repo: GHRepository(name: "Repository", repoDescription: "Description", image: Constants.imagePlaceholder))
+    RepoDetailView(repo: GHRepository(name: "Repository", repoDescription: "Description", image: Constants.imagePlaceholder, stars: 100, updatedAt: Date()))
         .environment(RepositoryViewModel())
 }

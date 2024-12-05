@@ -15,8 +15,7 @@ protocol GitHubReposDBService {
     func update(repo: GHRepository) async throws
 }
 
-final class GitHubReposDBServiceImpl: GitHubReposDBService {
-    
+actor GitHubReposDBServiceImpl: GitHubReposDBService {
     private let container: ModelContainer
     
     init() throws {
@@ -53,12 +52,12 @@ final class GitHubReposDBServiceImpl: GitHubReposDBService {
     @MainActor
     func update(repo: GHRepository) async throws {
         let repos = try await fetchRepos()
-        print(repos.firstIndex(of: repo) ?? "000")
         guard let index = repos.map(\.id).firstIndex(of: repo.id) else { throw DBError.notFound }
         
         repos[index].name = repo.name
         repos[index].repoDescription = repo.repoDescription
         repos[index].image = repo.image
+        repos[index].pushedAt = .now
         
         let context = container.mainContext
         try context.save()

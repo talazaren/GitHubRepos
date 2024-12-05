@@ -14,7 +14,7 @@ protocol GHRepositoriesUseCase {
     func updateRepo(repo: GHRepository) async throws
 }
 
-final class GHRepositoriesUseCaseImpl: GHRepositoriesUseCase {
+actor GHRepositoriesUseCaseImpl: GHRepositoriesUseCase {
     private let repository: GHReposRepository
     
     init(repository: GHReposRepository = GHReposRepositoryImpl()) {

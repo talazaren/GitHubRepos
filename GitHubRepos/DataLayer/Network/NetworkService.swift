@@ -11,7 +11,7 @@ protocol NetworkService {
     func fetch<T: Decodable>(from endpoint: Endpoint) async throws -> (T, HTTPURLResponse)
 }
 
-final class NetworkServiceImpl: NetworkService {
+actor NetworkServiceImpl: NetworkService {
     private let session: URLSession
     
     init(session: URLSession = .shared) {
@@ -19,9 +19,11 @@ final class NetworkServiceImpl: NetworkService {
     }
     
     func fetch<T: Decodable>(from endpoint: Endpoint) async throws -> (T, HTTPURLResponse) {
-        print("request")
         let request = try endpoint.urlRequest()
+        print("Request sent")
         let (data, response) = try await session.data(for: request)
+        print("Reponse received")
+        print(response.url)
         
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
@@ -34,6 +36,7 @@ final class NetworkServiceImpl: NetworkService {
             let decodedData = try decoder.decode(T.self, from: data)
             return (decodedData, httpResponse)
         } catch {
+            print(error)
             throw NetworkError.decodingFailed
         }
     }

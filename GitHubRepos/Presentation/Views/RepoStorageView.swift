@@ -12,12 +12,11 @@ struct RepoStorageView: View {
     @Environment(RepositoryViewModel.self) private var repoVM
     
     @State private var showAlert = false
-    @State private var sort: SearchReposSort = .stars
     
     var body: some View {
         NavigationStack {
             VStack {
-                SortView(sort: $sort)
+                SortView()
                 
                 List {
                     ForEach(repoVM.repositories) { repository in
@@ -37,7 +36,9 @@ struct RepoStorageView: View {
                     RepoDetailView(repo: repo)
                 }
                 .onChange(of: repoVM.error) { _, _ in
-                    showAlert = true
+                    if repoVM.error != nil {
+                        showAlert = true
+                    }
                 }
                 .alert(Constants.alertTitle, isPresented: $showAlert) {
                     Button(role: .cancel) {
@@ -50,12 +51,6 @@ struct RepoStorageView: View {
                 
                 LoadingRowView()
                 
-            }
-            .onAppear {
-                sort = repoVM.sort
-            }
-            .onChange(of: sort) { _, sort in
-                repoVM.sort = sort
             }
             .navigationTitle(Constants.viewTitle)
             .task {

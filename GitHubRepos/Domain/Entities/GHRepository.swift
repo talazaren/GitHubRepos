@@ -14,11 +14,22 @@ final class GHRepository {
     var name: String = ""
     var repoDescription: String = ""
     var image: String = ""
+    var stars: Int = 0
+    var pushedAt: Date = Date()
     
-    init(id: String = UUID().uuidString, name: String, repoDescription: String, image: String) {
+    init(
+        id: String = UUID().uuidString,
+        name: String,
+        repoDescription: String,
+        image: String,
+        stars: Int,
+        updatedAt: Date
+    ) {
         self.id = id
         self.name = name
         self.repoDescription = repoDescription
         self.image = image
+        self.stars = stars
+        self.pushedAt = updatedAt
     }
 }
